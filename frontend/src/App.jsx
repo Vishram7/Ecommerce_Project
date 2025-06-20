@@ -1,6 +1,9 @@
 import { useLocation } from "react-router-dom";
 import AppRoutes from "./routes/AppRoutes";
-import Navbar from "./common/Navbar";
+import NavBar from "./common/Navbar";
+import { ToastContainer } from 'react-toastify';
+import './App.css'
+
 
 
 function App() {
@@ -12,7 +15,8 @@ function App() {
 
   return (
     <>
-      {showNavbar && <Navbar />}
+      {showNavbar && < NavBar/>}
+      <ToastContainer position="top-right" autoClose={3000} />
       <AppRoutes />
     </>
   );

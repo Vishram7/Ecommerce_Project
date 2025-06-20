@@ -1,20 +1,10 @@
-import { configureStore } from "@reduxjs/toolkit";
-import createSagaMiddleware from "redux-saga";
-import rootSaga from "./sagas";
-import driverReducer from "./driver/driverSlice";
+import { configureStore } from '@reduxjs/toolkit'
+import { apiSlice } from '../features/api/apiSlice'
 
-
-
-const sagaMiddleware = createSagaMiddleware();
-
-const store = configureStore({
-    reducer: {
-        driver: driverReducer,
-    },
-    middleware:  (getDefaultMiddleware) => getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
-
+export const store = configureStore({
+  reducer: {
+    [apiSlice.reducerPath]: apiSlice.reducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(apiSlice.middleware),
 })
-
-sagaMiddleware.run(rootSaga);
-
-export default store;

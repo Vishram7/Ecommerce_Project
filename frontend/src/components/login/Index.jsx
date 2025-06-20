@@ -1,39 +1,61 @@
 import React from 'react'
-import {Button, Container, Form} from 'react-bootstrap'
+import { Button, Container, Form } from 'react-bootstrap'
 import { Link, useNavigate } from "react-router-dom";
+import { useLoginUserMutation } from '../../features/user/userApi';
+import { toast } from 'react-toastify';
 
 const Index = () => {
-    const navigate = useNavigate()
+
+  const [loginUser, {isLoading}] = useLoginUserMutation()
+  const navigate = useNavigate()
 
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+    const email = formData.get('email')
+    const password = formData.get('password')
+
+    try {
+      const result = await loginUser({ email, password }).unwrap()
+      console.log(result, "result from login user");
+      if (result?.statusCode === 200) {
+        toast.success(result?.message)
         navigate('/home')
+
+      }
+
+    } catch (error) {
+
+      toast.error(error?.data?.message || "Error")
     }
+  }
 
 
   return (
     <>
-    <Container>
+      <Container>
         <Form onSubmit={handleSubmit}>
-            <Form.Label>Email</Form.Label>
-            <Form.Control
+          <Form.Label>Email</Form.Label>
+          <Form.Control
             placeholder='Enter email'
             type='email'
+            name='email'
             required
-            />
+          />
 
-            <Form.Label>Password</Form.Label>
-            <Form.Control
+          <Form.Label>Password</Form.Label>
+          <Form.Control
             placeholder='Enter password'
             type='password'
+            name='password'
             required
-            />
+          />
 
-            <Button type='submit'>Login</Button>
-            <p>New user? <Link to='/register'>Register</Link></p>
+          <Button type='submit'>{isLoading ? 'Logging in...' : 'Login'}</Button>
+          <p>New user? <Link to='/register'>Register</Link></p>
         </Form>
-    </Container>
+      </Container>
     </>
   )
 }

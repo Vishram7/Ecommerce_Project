@@ -2,6 +2,10 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/User')
 const { default: mongoose } = require('mongoose')
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 
 
@@ -25,21 +29,31 @@ router.post('/login', async (req, res) => {
 
     try {
         const user = await User.findOne({ email })
-        const userId = user._id.toString();
-        console.log(userId);
-        const userObjectId = new mongoose.Types.ObjectId(userId);
-        console.log(userObjectId);
-    
-        
+
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
         if (user.password !== password) {
             return res.status(401).json({ message: 'Invalid password' })
         }
-        return res.status(200).json({ message: 'Login successfull', userid: userId })
+
+        const userId = user._id.toString();
+
+         const token = jwt.sign(
+      { userid: userId, email: user.email }, // payload
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN || '1d' }
+    );
+
+        console.log(userId);
+        const userObjectId = new mongoose.Types.ObjectId(userId);
+        console.log(userObjectId);
+    
+        
+        
+        return res.status(200).json({ statusCode: 200, message: 'Login successfull', token: token })
     } catch (error) {
-        return res.status(500).json({ error: error.message })
+        return res.status(500).json({ message: error.message })
     }
 })
 
