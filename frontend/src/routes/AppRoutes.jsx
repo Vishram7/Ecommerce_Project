@@ -1,26 +1,27 @@
-import React from 'react'
+import React from "react";
 import { Route, Routes } from "react-router-dom";
-import Login from '../pages/Login';
-import Register from '../pages/Register';
-import Home from '../pages/Home';
-import Cart from '../pages/Cart';
-import Checkout from '../pages/Checkout';
-import AddProduct from '../AddProduct';
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import Home from "../pages/Home";
+import Cart from "../pages/Cart";
+import Checkout from "../pages/Checkout";
+import AddProduct from "../AddProduct";
+import Product from "../pages/Product";
 
 const AppRoutes = () => {
-    return (
-        <>
-            <Routes>
-                <Route path='/login' element={<Login />} />
-                <Route path='/register' element={<Register />} />
-                <Route path='/home' element={<Home />} />
-                <Route path='/cart' element={<Cart />} />
-                <Route path='/checkout' element={<Checkout />} />
-                <Route path='/addproduct' element={<AddProduct />} />
-                
-            </Routes>
-        </>
-    )
-}
+  return (
+    <>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/addproduct" element={<AddProduct />} />
+        <Route path="/product/:productid" element={<Product />} />
+      </Routes>
+    </>
+  );
+};
 
-export default AppRoutes
+export default AppRoutes;

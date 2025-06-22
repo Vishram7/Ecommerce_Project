@@ -8,6 +8,12 @@ const productApi = apiSlice.injectEndpoints({
       transformResponse: (response) => response.data,
       providesTags: ["Product"],
     }),
+
+    getSingleProduct: builder.query({
+      query: (productid) => `/product/getproduct/${productid}`,
+      providesTags: ["Product"],
+    }),
+
     addProduct: builder.mutation({
       query: (formData) => ({
         url: "/product/addproduct",
@@ -20,4 +26,8 @@ const productApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetProductsQuery, useAddProductMutation } = productApi;
+export const {
+  useGetProductsQuery,
+  useAddProductMutation,
+  useGetSingleProductQuery,
+} = productApi;

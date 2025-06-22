@@ -67,6 +67,7 @@ router.put("/updateproduct/:productid", async (req, res) => {
   }
 });
 
+//Delet product
 router.post("/deleteproduct", verifyToken, async (req, res) => {
   const { productid } = req.body;
   // const { userid } = req.user;
@@ -80,6 +81,27 @@ router.post("/deleteproduct", verifyToken, async (req, res) => {
     console.log(error);
 
     return res.status(500).json({ error: error.message });
+  }
+});
+
+//Get single product
+router.get("/getproduct/:productid", async (req, res) => {
+  const { productid } = req.params;
+
+  try {
+    const product = await Product.findOne({ _id: productid });
+    if (!product) {
+      return res
+        .status(404)
+        .json({ statusCode: 404, message: "Product not found" });
+    }
+
+    return res.status(200).json(product);
+  } catch (error) {
+    console.log(error);
+    return res
+      .status(500)
+      .json({ statusCode: 500, message: "Internal server error" });
   }
 });
 module.exports = router;

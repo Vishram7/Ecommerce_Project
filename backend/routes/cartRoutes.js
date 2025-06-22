@@ -111,4 +111,44 @@ router.post("/removefromcart", verifyToken, async (req, res) => {
   }
 });
 
+// Quantity update
+router.post("/updatequantity", verifyToken, async (req, res) => {
+  const { productid, quantity } = req.body;
+  const { userid } = req.user;
+
+  if (!productid || typeof quantity !== "number" || quantity < 1) {
+    return res.status(400).json({
+      statusCode: 400,
+      message: "Invalid product ID or quantity",
+    });
+  }
+
+  try {
+    const cartItem = await Cart.findOneAndUpdate(
+      { userid, productid },
+      { $set: { quantity } },
+      { new: true }
+    );
+
+    if (!cartItem) {
+      return res.status(404).json({
+        statusCode: 404,
+        message: "Product not found in cart",
+      });
+    }
+
+    return res.status(200).json({
+      statusCode: 200,
+      message: "Quantity updated",
+      data: cartItem,
+    });
+  } catch (err) {
+    console.error("Error updating quantity:", err);
+    return res.status(500).json({
+      statusCode: 500,
+      message: "Internal server error",
+    });
+  }
+});
+
 module.exports = router;

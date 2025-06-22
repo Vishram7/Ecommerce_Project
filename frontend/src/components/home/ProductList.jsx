@@ -22,7 +22,7 @@ const ProductList = () => {
   const handleAdd = async (productid) => {
     try {
       const result = await addToCart({ productid }).unwrap();
-      // console.log(result);
+
       toast.success(result?.message);
     } catch (error) {
       console.log(error.message);
@@ -39,54 +39,68 @@ const ProductList = () => {
         <Row style={{ rowGap: "20px" }}>
           {/* {products?.map((value, index) => ( */}
           {data?.map((value, index) => (
-            <Col
-              lg={2}
-              key={value?._id}
-              style={{
-                padding: "10px",
-                boxShadow:
-                  hoveredIndex === index
-                    ? "0 4px 12px rgba(0, 0, 0, 0.2)"
-                    : "none",
-                transition: "box-shadow 0.2s ease-in-out",
-                cursor: "pointer",
-              }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-            >
-              <div style={{ height: "285px", width: "100%" }}>
-                <img
-                  src={value?.imageurl}
-                  style={{
-                    width: "100%",
-                    height: "200px",
-                    objectFit: "cover",
-                  }}
-                  alt=""
-                />
-                <h2>{value?.productname}</h2>
+            <>
+              <Col
+                lg={2}
+                key={value?._id}
+                style={{
+                  padding: "10px",
+                  boxShadow:
+                    hoveredIndex === index
+                      ? "0 4px 12px rgba(0, 0, 0, 0.2)"
+                      : "none",
+                  transition: "box-shadow 0.2s ease-in-out",
+                  cursor: "pointer",
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(null)}
+              >
+                {/* <Link
+                  style={{ textDecoration: "none" }}
+                  to={`/product/${value?._id}`}
+                > */}
                 <div
-                  style={{ display: "flex", gap: "10px", alignItems: "center" }}
+                  onClick={() => navigate(`/product/${value?._id}`)}
+                  style={{ height: "285px", width: "100%" }}
                 >
-                  <p>₹{value?.price}</p>
-                  <p className="text-muted" style={{ fontSize: "13px" }}>
-                    <s>{value?.discount > 0 && `₹${value?.actualprice}`}</s>
-                  </p>
+                  <img
+                    src={value?.imageurl}
+                    style={{
+                      width: "100%",
+                      height: "200px",
+                      objectFit: "cover",
+                    }}
+                    alt=""
+                  />
+                  <h2>{value?.productname}</h2>
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "10px",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p>₹{value?.price}</p>
+                    <p className="text-muted" style={{ fontSize: "13px" }}>
+                      <s>{value?.discount > 0 && `₹${value?.actualprice}`}</s>
+                    </p>
+                  </div>
                 </div>
-              </div>
-              {isInCart(value?._id) ? (
-                <Button
-                  variant="outline-primary"
-                  onClick={() => navigate("/cart")}
-                >
-                  Go to Cart
-                </Button>
-              ) : (
-                <Button onClick={() => handleAdd(value?._id)}>
-                  Add to Cart
-                </Button>
-              )}
-            </Col>
+                {isInCart(value?._id) ? (
+                  <Button
+                    variant="outline-primary"
+                    onClick={() => navigate("/cart")}
+                  >
+                    Go to Cart
+                  </Button>
+                ) : (
+                  <Button onClick={() => handleAdd(value?._id)}>
+                    Add to Cart
+                  </Button>
+                )}
+                {/* </Link> */}
+              </Col>
+            </>
           ))}
         </Row>
       </div>

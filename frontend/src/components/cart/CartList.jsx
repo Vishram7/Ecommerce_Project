@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import {
   useGetCartQuery,
   useRemoveFromCartMutation,
+  useUpdateQuantityMutation,
 } from "../../features/cart/cartApi";
 import { toast } from "react-toastify";
 
@@ -14,6 +15,7 @@ const CartList = () => {
   // console.log(data);
 
   const [removeFromCart] = useRemoveFromCartMutation();
+  const [updateQuantity] = useUpdateQuantityMutation();
 
   const handleRemove = async (productid) => {
     // console.log(productid);
@@ -31,6 +33,26 @@ const CartList = () => {
     }
   };
 
+  const handleQuantityChange = async (productid, newqty) => {
+    if (newqty < 1) return;
+
+    try {
+      const result = await updateQuantity({
+        productid,
+        quantity: newqty,
+      }).unwrap();
+
+      if (result?.statusCode === 200) {
+        toast.success(result?.message);
+      } else {
+        toast.error("Failed to update quantity");
+      }
+    } catch (err) {
+      toast.error("Something went wrong");
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <Container style={{ background: "white", marginTop: "20px" }}>
@@ -38,7 +60,6 @@ const CartList = () => {
           <div
             key={value?._id}
             style={{
-              // border: '1px solid grey',
               padding: "10px 20px",
               borderBottom: "1px solid #e0e0e0",
               width: "100%",
@@ -88,10 +109,46 @@ const CartList = () => {
               </div>
             </div>
             <div style={{ display: "flex", gap: "50px" }}>
-              <p>quantity</p>
-              <Button onClick={() => handleRemove(value?.productid)}>
-                Remove
-              </Button>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "50px",
+                  marginTop: "10px",
+                }}
+              >
+                <div
+                  style={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
+                  <Button
+                    variant="light"
+                    onClick={() =>
+                      handleQuantityChange(
+                        value?.productid,
+                        value?.quantity - 1
+                      )
+                    }
+                    disabled={value?.quantity <= 1}
+                  >
+                    -
+                  </Button>
+                  <span>{value?.quantity}</span>
+                  <Button
+                    variant="light"
+                    onClick={() =>
+                      handleQuantityChange(
+                        value?.productid,
+                        value?.quantity + 1
+                      )
+                    }
+                  >
+                    +
+                  </Button>
+                </div>
+                <Button onClick={() => handleRemove(value?.productid)}>
+                  Remove
+                </Button>
+              </div>
             </div>
           </div>
         ))}
