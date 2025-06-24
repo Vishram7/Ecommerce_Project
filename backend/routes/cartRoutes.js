@@ -36,9 +36,13 @@ router.post("/addtocart", verifyToken, async (req, res) => {
 // Get all products in the cart for a user
 router.get("/getcart", verifyToken, async (req, res) => {
   const { userid } = req.user;
+  // console.log("User ID:", userid);
+  
 
   try {
     const cartItems = await Cart.find({ userid }).populate("productid");
+    // console.log("Cart Items:", cartItems);
+    
 
     let totalActualPrice = 0;
     let totalDiscount = 0;

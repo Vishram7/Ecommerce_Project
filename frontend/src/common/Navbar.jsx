@@ -4,12 +4,14 @@ import Navbar from "react-bootstrap/Navbar";
 import { Link, useNavigate } from "react-router-dom";
 import { useGetCartQuery } from "../features/cart/cartApi";
 import { toast } from "react-toastify";
+import { useLogout } from "../utils/useLogout";
 // import { FaShoppingCart } from "react-icons/fa";
 
 const NavBar = () => {
   const navigate = useNavigate();
   const { data } = useGetCartQuery();
   const items = data?.cartDetails?.length;
+  const logout = useLogout()
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
@@ -58,7 +60,7 @@ const NavBar = () => {
                   )}
                   Cart
                 </Button>
-                <Button onClick={handleLogout}>Logout</Button>
+                <Button onClick={logout}>Logout</Button>
               </div>
             </Nav>
           </Navbar.Collapse>
